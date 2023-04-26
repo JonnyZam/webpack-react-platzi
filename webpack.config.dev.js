@@ -1,25 +1,18 @@
 const path = require('path');
 const HtmlWebpackplugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerplugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 
 module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
-        publicPath: "/",
     },
     resolve: {
         extensions: ['.js', '.jsx'],
-        alias: {
-            '@component': path.resolve(__dirname, 'src/components/'),
-            '@styles': path.resolve(__dirname, 'src/styles/')
-        }
     },
-    mode: 'production',
+    mode: 'development',
     module: {
         rules:[
             {
@@ -55,13 +48,17 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css'
         }),
-        new CleanWebpackPlugin(),
     ],
-    optimization: {
-        minimize: true,
-        minimizer: [
-            new CssMinimizerplugin(),
-            new TerserPlugin(),
-        ]
-    }
+    devServer: {
+        static: {
+            directory: path.join(__dirname, "dist"),
+            watch: true,
+        },
+        watchFiles: path.join(__dirname, "./**"), //observa los cambios en todos nuestros archivos y actualiza el navegador
+        compress: true,
+        historyApiFallback: true,
+        port: 8080,
+        open: true, //Hace que se abra en el navegador
+        
+    },
 }
